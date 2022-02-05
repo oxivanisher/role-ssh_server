@@ -1,0 +1,59 @@
+---
+
+- name: make sure the ssh server is installed
+  ansible.builtin.package:
+    name: openssh-server
+    state: present
+
+- name: configure root login
+  ansible.builtin.lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin without-password'
+  notify: restart ssh-server
+
+- name: configure banner
+  ansible.builtin.lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: '^Banner'
+    line: '#Banner /etc/issue.net'
+#     line: 'Banner /etc/issue.net'
+  notify: restart ssh-server
+
+- name: configure debian banner
+  ansible.builtin.lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: '^DebianBanner'
+    line: 'DebianBanner no'
+  notify: restart ssh-server
+
+- name: configure the usage of localhost on x forward
+  ansible.builtin.lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: '^X11UseLocalhost'
+    line: 'X11UseLocalhost no'
+  notify: restart ssh-server
+
+# installing keys for raspian and xbian
+- import_tasks: rpi.yml
+  when: ansible_architecture|lower == "armv7l"
+
+# clean deprecated ssh options (fight against log spam)
+#- name: get openssh-server version
+#  shell: 'dpkg -s openssh-server | grep "^Version" | sed -re "s/^.*:([0-9]+\.[0-9]+).*/\1/"'
+#  register: openssh_version
+#  changed_when: False
+
+- name: remove deprecated ssh options
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item }}"
+    line: ""
+#  when: openssh_version.stdout is version('7.4', '>=')
+  loop:
+    - KeyRegenerationInterval
+    - ServerKeyBits
+    - RSAAuthentication
+    - RhostsRSAAuthentication
+    - UsePrivilegeSeparation
+  notify: restart ssh-server

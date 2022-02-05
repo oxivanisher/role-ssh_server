@@ -1,0 +1,37 @@
+---
+
+- name: looking up users
+  ansible.builtin.getent:
+    database: passwd
+
+- name: "add authorized keys for user pi"
+  ansible.posix.authorized_key:
+    user: "pi"
+    state: present
+    key: '{{ item }}'
+  loop: "{{ ssh_keys_to_add }}"
+  when: "'pi' in ansible_facts.getent_passwd"
+
+- name: "remove authorized keys for user pi"
+  ansible.posix.authorized_key:
+    user: "pi"
+    state: absent
+    key: '{{ item }}'
+  loop: "{{ ssh_keys_to_remove }}"
+  when: "'pi' in ansible_facts.getent_passwd"
+
+- name: "add authorized keys for user xbian"
+  ansible.posix.authorized_key:
+    user: "xbian"
+    state: present
+    key: '{{ item }}'
+  loop: "{{ ssh_keys_to_add }}"
+  when: "'xbian' in ansible_facts.getent_passwd"
+
+- name: "remove authorized keys for user xbian"
+  ansible.posix.authorized_key:
+    user: "xbian"
+    state: absent
+    key: '{{ item }}'
+  loop: "{{ ssh_keys_to_remove }}"
+  when: "'xbian' in ansible_facts.getent_passwd"
