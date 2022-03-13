@@ -1,2 +1,5 @@
 ---
-# vars file for role-ssh
+arm_versions:
+  - armv7l
+  - armv6l
+

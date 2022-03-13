@@ -36,7 +36,7 @@
 
 # installing keys for raspian and xbian
 - import_tasks: rpi.yml
-  when: ansible_architecture|lower == "armv7l"
+  when: ansible_architecture|lower in arm_versions
 
 # clean deprecated ssh options (fight against log spam)
 #- name: get openssh-server version
