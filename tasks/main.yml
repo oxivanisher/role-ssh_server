@@ -39,10 +39,10 @@
   when: ansible_architecture|lower in arm_versions
 
 # clean deprecated ssh options (fight against log spam)
-#- name: get openssh-server version
-#  shell: 'dpkg -s openssh-server | grep "^Version" | sed -re "s/^.*:([0-9]+\.[0-9]+).*/\1/"'
-#  register: openssh_version
-#  changed_when: False
+# - name: get openssh-server version
+#    ansible.builtin.shell: 'dpkg -s openssh-server | grep "^Version" | sed -re "s/^.*:([0-9]+\.[0-9]+).*/\1/"'
+#    register: openssh_version
+#    changed_when: False
 
 - name: remove deprecated ssh options
   ansible.builtin.lineinfile:
