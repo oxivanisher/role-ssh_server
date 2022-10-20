@@ -1,41 +1,42 @@
 ---
 
-- name: make sure the ssh server is installed
+- name: Make sure the ssh server is installed
   ansible.builtin.package:
     name: openssh-server
     state: present
 
-- name: configure root login
+- name: Configure root login
   ansible.builtin.lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: '^PermitRootLogin'
     line: 'PermitRootLogin without-password'
-  notify: restart ssh-server
+  notify: Restart ssh-server
 
-- name: configure banner
+- name: Configure banner
   ansible.builtin.lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: '^Banner'
     line: '#Banner /etc/issue.net'
 #     line: 'Banner /etc/issue.net'
-  notify: restart ssh-server
+  notify: Restart ssh-server
 
-- name: configure debian banner
+- name: Configure debian banner
   ansible.builtin.lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: '^DebianBanner'
     line: 'DebianBanner no'
-  notify: restart ssh-server
+  notify: Restart ssh-server
 
-- name: configure the usage of localhost on x forward
+- name: Configure the usage of localhost on x forward
   ansible.builtin.lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: '^X11UseLocalhost'
     line: 'X11UseLocalhost no'
-  notify: restart ssh-server
+  notify: Restart ssh-server
 
 # installing keys for raspian and xbian
-- import_tasks: rpi.yml
+- name: Import tasks from rpi.yml
+  ansible.builtin.import_tasks: rpi.yml
   when: ansible_architecture|lower in arm_versions
 
 # clean deprecated ssh options (fight against log spam)
@@ -44,7 +45,7 @@
 #    register: openssh_version
 #    changed_when: False
 
-- name: remove deprecated ssh options
+- name: Remove deprecated ssh options
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "{{ item }}"
@@ -56,4 +57,4 @@
     - RSAAuthentication
     - RhostsRSAAuthentication
     - UsePrivilegeSeparation
-  notify: restart ssh-server
+  notify: Restart ssh-server
