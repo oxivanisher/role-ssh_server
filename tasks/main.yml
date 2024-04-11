@@ -4,6 +4,8 @@
   ansible.builtin.package:
     name: openssh-server
     state: present
+  become: true
+  become_user: root
 
 - name: Configure root login
   ansible.builtin.lineinfile:
@@ -11,14 +13,17 @@
     regexp: '^PermitRootLogin'
     line: 'PermitRootLogin without-password'
   notify: Restart ssh-server
+  become: true
+  become_user: root
 
 - name: Configure banner
   ansible.builtin.lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: '^Banner'
     line: '#Banner /etc/issue.net'
-#     line: 'Banner /etc/issue.net'
   notify: Restart ssh-server
+  become: true
+  become_user: root
 
 - name: Configure debian banner
   ansible.builtin.lineinfile:
@@ -26,6 +31,8 @@
     regexp: '^DebianBanner'
     line: 'DebianBanner no'
   notify: Restart ssh-server
+  become: true
+  become_user: root
 
 - name: Configure the usage of localhost on x forward
   ansible.builtin.lineinfile:
@@ -33,6 +40,8 @@
     regexp: '^X11UseLocalhost'
     line: 'X11UseLocalhost no'
   notify: Restart ssh-server
+  become: true
+  become_user: root
 
 # installing keys for raspian and xbian
 - name: Import tasks from rpi.yml
@@ -58,3 +67,5 @@
     - RhostsRSAAuthentication
     - UsePrivilegeSeparation
   notify: Restart ssh-server
+  become: true
+  become_user: root
