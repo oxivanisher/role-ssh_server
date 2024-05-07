@@ -7,65 +7,35 @@
   become: true
   become_user: root
 
-- name: Configure root login
+- name: "Set SSH server option {{ item.key }}"
   ansible.builtin.lineinfile:
     dest: "/etc/ssh/sshd_config"
-    regexp: '^PermitRootLogin'
-    line: 'PermitRootLogin without-password'
+    regexp: '^{{ item.key }}'
+    line: '{{ item.key }} {{ item.value }}'
+    validate: /usr/sbin/sshd -tf %s
+  loop: "{{ ssh_server_set_options }}"
   notify: Restart ssh-server
   become: true
   become_user: root
 
-- name: Configure banner
+- name: "Comment SSH server option {{ item }}"
   ansible.builtin.lineinfile:
     dest: "/etc/ssh/sshd_config"
-    regexp: '^Banner'
-    line: '#Banner /etc/issue.net'
+    regexp: '^{{ item }}'
+    line: '#{{ item }}'
+    validate: /usr/sbin/sshd -tf %s
+  loop: "{{ ssh_server_comment_options }}"
   notify: Restart ssh-server
   become: true
   become_user: root
 
-- name: Configure debian banner
-  ansible.builtin.lineinfile:
-    dest: "/etc/ssh/sshd_config"
-    regexp: '^DebianBanner'
-    line: 'DebianBanner no'
-  notify: Restart ssh-server
-  become: true
-  become_user: root
-
-- name: Configure the usage of localhost on x forward
-  ansible.builtin.lineinfile:
-    dest: "/etc/ssh/sshd_config"
-    regexp: '^X11UseLocalhost'
-    line: 'X11UseLocalhost no'
-  notify: Restart ssh-server
-  become: true
-  become_user: root
-
-# installing keys for raspian and xbian
-- name: Import tasks from rpi.yml
-  ansible.builtin.import_tasks: rpi.yml
-  when: ansible_architecture|lower in arm_versions
-
-# clean deprecated ssh options (fight against log spam)
-# - name: get openssh-server version
-#    ansible.builtin.shell: 'dpkg -s openssh-server | grep "^Version" | sed -re "s/^.*:([0-9]+\.[0-9]+).*/\1/"'
-#    register: openssh_version
-#    changed_when: False
-
-- name: Remove deprecated ssh options
+- name: "Remove deprecated ssh options {{ item }}"
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "{{ item }}"
-    line: ""
-#  when: openssh_version.stdout is version('7.4', '>=')
-  loop:
-    - KeyRegenerationInterval
-    - ServerKeyBits
-    - RSAAuthentication
-    - RhostsRSAAuthentication
-    - UsePrivilegeSeparation
+    state: absent
+    validate: /usr/sbin/sshd -tf %s
+  loop: "{{ ssh_server_remove_options }}"
   notify: Restart ssh-server
   become: true
   become_user: root

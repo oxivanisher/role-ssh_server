@@ -1,31 +1,40 @@
-Role Name
-=========
+ssh_server
+==========
 
-A brief description of the role goes here.
+Install and configure the openssh server.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+None
+
+Note
+----
+The you have to specify the `no` and `yes` options as strings (i.e. like `"no"` and `"yes"`), or Ansible will write them as boleans (`true` and `false`).
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+| Name                       | Comment                                                                   | Default value |
+|----------------------------|---------------------------------------------------------------------------|---------------|
+| ssh_server_set_options     | Set SSHD options to "key value"                          |                | `[PermitRootLogin: without-password, DebianBanner: "no", X11UseLocalhost: "no"]` |
+| ssh_server_comment_options | The directory in the os users home where the cloud will be mounted        | `[Banner]`    |
+| ssh_server_remove_options  | Your Nextcloud webdav URL (i.e. https://your.cloud.tld/remote.php/webdav) | `[ KeyRegenerationInterval, ServerKeyBits, RSAAuthentication, RhostsRSAAuthentication, UsePrivilegeSeparation]` |
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- name: Configure SSH Server
+  hosts: server
+  roles:
+    - role: oxivanisher.linux_base.ssh_server
+```
 
 License
 -------
@@ -35,4 +44,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This role is part of the [oxivanisher.linux_base](https://galaxy.ansible.com/ui/repo/published/oxivanisher/linux_base/) collection, and the source for that is located on [github](https://github.com/oxivanisher/collection-linux_base).
