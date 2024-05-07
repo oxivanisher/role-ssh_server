@@ -21,8 +21,8 @@
 - name: "Comment SSH server option {{ item }}"
   ansible.builtin.lineinfile:
     dest: "/etc/ssh/sshd_config"
-    regexp: '^{{ item }}'
-    line: '#{{ item }}'
+    regexp: '(^{{ item }} .*)'
+    line: '# \1'
     validate: /usr/sbin/sshd -tf %s
   loop: "{{ ssh_server_comment_options }}"
   notify: Restart ssh-server
