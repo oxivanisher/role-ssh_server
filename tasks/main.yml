@@ -13,7 +13,7 @@
     regexp: '^{{ item.key }}'
     line: '{{ item.key }} {{ item.value }}'
     validate: /usr/sbin/sshd -tf %s
-  loop: "{{ ssh_server_set_options }}"
+  loop: "{{ ssh_server_set_options | dict2items }}"
   notify: Restart ssh-server
   become: true
   become_user: root

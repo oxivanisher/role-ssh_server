@@ -2,9 +2,9 @@
 # defaults file for role-ssh_server
 
 ssh_server_set_options:
-  - PermitRootLogin: without-password
-  - DebianBanner: "no"
-  - X11UseLocalhost: "no"
+  PermitRootLogin: without-password
+  DebianBanner: "no"
+  X11UseLocalhost: "no"
 
 ssh_server_comment_options:
   - Banner

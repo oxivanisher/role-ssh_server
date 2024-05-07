@@ -17,7 +17,7 @@ Role Variables
 
 | Name                       | Comment                                                                   | Default value |
 |----------------------------|---------------------------------------------------------------------------|---------------|
-| ssh_server_set_options     | Set SSHD options to "key value"                          |                | `[PermitRootLogin: without-password, DebianBanner: "no", X11UseLocalhost: "no"]` |
+| ssh_server_set_options     | Set SSHD options to "key value"                          |                | `PermitRootLogin: without-password, DebianBanner: "no", X11UseLocalhost: "no"` |
 | ssh_server_comment_options | The directory in the os users home where the cloud will be mounted        | `[Banner]`    |
 | ssh_server_remove_options  | Your Nextcloud webdav URL (i.e. https://your.cloud.tld/remote.php/webdav) | `[ KeyRegenerationInterval, ServerKeyBits, RSAAuthentication, RhostsRSAAuthentication, UsePrivilegeSeparation]` |
 
