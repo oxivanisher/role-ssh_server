@@ -1,5 +1,6 @@
 ssh_server
 ==========
+[![Ansible Lint](https://github.com/oxivanisher/role-ssh_server/actions/workflows/ansible-lint.yml/badge.svg)](https://github.com/oxivanisher/role-ssh_server/actions/workflows/ansible-lint.yml)
 
 Install and configure the openssh server.
 
