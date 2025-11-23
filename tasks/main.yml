@@ -7,7 +7,7 @@
   become: true
   become_user: root
 
-- name: "Set SSH server option {{ item.key }}"
+- name: "Set SSH server option {{ item.key | default('option') }}"
   ansible.builtin.lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: '^{{ item.key }}'
@@ -18,7 +18,7 @@
   become: true
   become_user: root
 
-- name: "Comment SSH server option {{ item }}"
+- name: "Comment SSH server option {{ item | default('option') }}"
   ansible.builtin.lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: '(^{{ item }} .*)'
@@ -30,7 +30,7 @@
   become: true
   become_user: root
 
-- name: "Remove deprecated ssh options {{ item }}"
+- name: "Remove deprecated ssh option {{ item | default('option') }}"
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "{{ item }}"
